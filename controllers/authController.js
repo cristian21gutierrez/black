@@ -18,7 +18,7 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
 
-       
+    
         const isMatch = await user.comparePassword(contraseña);
         if (!isMatch) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
