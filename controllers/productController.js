@@ -27,7 +27,7 @@ const updateProduct = async (req, res) => {
         let { id } = req.params;
         console.log(`ID recibido para actualización: ${id}`);
 
-        // Eliminar caracteres no deseados del ID (por ejemplo, los dos puntos)
+        // Eliminar caracteres no deseados del ID 
         id = id.replace(/:/g, '');
         console.log(`ID limpiado para actualización: ${id}`);
 

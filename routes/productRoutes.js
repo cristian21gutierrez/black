@@ -8,7 +8,7 @@ router.get('/', getAllProducts);
 router.get('/category/:categoria', getProductsByCategory);
 
 // Rutas protegidas
-router.use(protegerRuta); // Protege todas las siguientes rutas
+router.use(protegerRuta); 
 router.post('/', verificarAdmin, createProduct);
 router.put('/:id', verificarAdmin, updateProduct);
 router.delete('/:id', verificarAdmin, deleteProduct);

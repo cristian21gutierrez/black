@@ -7,18 +7,18 @@ const login = async (req, res) => {
     try {
         const { usuario, contraseña } = req.body;
 
-        // Validar campos requeridos
+        
         if (!usuario || !contraseña) {
             return res.status(400).json({ message: 'Usuario y contraseña son requeridos' });
         }
 
-        // Buscar usuario por nombre de usuario
+        
         const user = await User.findOne({ usuario });
         if (!user) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
 
-        // Verificar contraseña
+       
         const isMatch = await user.comparePassword(contraseña);
         if (!isMatch) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
@@ -26,7 +26,7 @@ const login = async (req, res) => {
 
         // Generar token JWT
         const token = jwt.sign(
-            { id: user._id, nombre: user.nombre, rol: user.role }, // Asegúrate de que el campo 'role' sea correcto
+            { id: user._id, nombre: user.nombre, rol: user.role }, 
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );

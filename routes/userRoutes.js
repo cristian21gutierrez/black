@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protegerRuta, verificarAdmin } = require('../middleware/authMiddleware'); // Middleware de autenticación
+const { protegerRuta, verificarAdmin } = require('../middleware/authMiddleware'); 
 const { getAllUsers, createUser, updateUser, deleteUser, getUserByUsername } = require('../controllers/userController');
 
 router.get('/', protegerRuta, verificarAdmin, getAllUsers);

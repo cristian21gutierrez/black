@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { protegerRuta, verificarAdmin } = require('../middleware/authMiddleware');
-const { createOrder, getAllOrders, getOrderById, updateOrderStatus, deleteOrder } = require('../controllers/orderController');
+const { createOrder, getAllOrders, getOrderById, updateOrderStatus, deleteOrder, getUserOrders } = require('../controllers/orderController');
+
+// Ruta para obtener los pedidos del usuario autenticado (usuario común)
+router.get('/myorders', protegerRuta, getUserOrders);
 
 // Ruta para crear un nuevo pedido (usuarios autenticados)
 router.post('/', protegerRuta, createOrder);

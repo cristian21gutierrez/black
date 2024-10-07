@@ -17,8 +17,8 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pendiente', 'procesado', 'enviado', 'entregado'], // Enum en español
-        default: 'pendiente', // Valor predeterminado
+        enum: ['pendiente', 'procesado', 'enviado', 'entregado'], 
+        default: 'pendiente', 
     },
     createdAt: {
         type: Date,
