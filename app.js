@@ -1,5 +1,5 @@
 const express = require('express');
-const { connected } = require('../database/connect');
+const { connected } = require('./database/connect');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -12,10 +12,10 @@ app.use(express.json());
 connected();
 
 // Importar y usar las rutas
-const userRoutes = require('../routes/userRoutes');
-const productRoutes = require('../routes/productRoutes');
-const orderRoutes = require('../routes/orderRoutes');
-const authRoutes = require('../routes/authRoutes'); 
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const authRoutes = require('./routes/authRoutes'); 
 
 // Prefijos para las rutas
 app.use('/api/users', userRoutes);
