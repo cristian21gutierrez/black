@@ -19,6 +19,6 @@ router.get('/:id', protegerRuta, getOrderById);
 router.put('/:id', protegerRuta, verificarAdmin, updateOrderStatus);
 
 // Ruta para eliminar un pedido (solo admin)
-router.delete('/:id', verificarAdmin, deleteOrder);
+router.delete('/:id', protegerRuta, verificarAdmin, deleteOrder);
 
 module.exports = router;
