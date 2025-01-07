@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Middleware para proteger rutas y autenticar al usuario
 const protegerRuta = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
@@ -11,7 +10,9 @@ const protegerRuta = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await User.findById(decoded.id);
+        req.user = await User.findById(decoded.id); 
+
+        console.log('Usuario autenticado:', req.user);
 
         if (!req.user) {
             return res.status(401).json({ message: 'Acceso denegado. Usuario no encontrado' });
@@ -24,7 +25,8 @@ const protegerRuta = async (req, res, next) => {
     }
 };
 
-// Middleware para verificar si el usuario es administrador
+
+// Middleware para verificar si el usuario es admin
 const verificarAdmin = (req, res, next) => {
     if (req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Acceso denegado. No eres administrador' });
