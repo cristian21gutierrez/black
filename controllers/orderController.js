@@ -6,9 +6,8 @@ const mongoose = require('mongoose');
 const createOrder = async (req, res) => {
     try {
         const { productId, quantity } = req.body;
-        const userId = req.user._id; // Obtener el ID del usuario autenticado
-
-        // Validar campos requeridos
+        const userId = req.user._id; 
+        
         if (!productId || !quantity) {
             return res.status(400).json({ message: 'Todos los campos son obligatorios' });
         }
@@ -18,7 +17,7 @@ const createOrder = async (req, res) => {
             userId,
             productId,
             quantity,
-            status: 'pendiente', // Usar el valor en español definido en el enum
+            status: 'pendiente', 
         });
         await newOrder.save();
 
@@ -32,10 +31,10 @@ const createOrder = async (req, res) => {
 // Obtener todos los pedidos (admin)
 const getAllOrders = async (req, res) => {
     try {
-        // Usar populate para incluir la información del usuario y del producto
+        
         const orders = await Order.find()
-            .populate('userId', 'nombre')  // Solo incluir el campo nombre del usuario
-            .populate('productId', 'nombre');  // Solo incluir el campo nombre del producto
+            .populate('userId', 'nombre')  
+            .populate('productId', 'nombre');  
 
         res.json(orders);
     } catch (error) {
@@ -46,31 +45,27 @@ const getAllOrders = async (req, res) => {
 // Obtener un pedido por ID (admin o el mismo usuario)
 const getOrderById = async (req, res) => {
     try {
-        const { id } = req.params; // Obteniendo el ID de los parámetros de la URL
+        const { id } = req.params; 
 
         // Intentar buscar el pedido por ID
         const order = await Order.findById(id)
-            .populate('userId', 'nombre') // Asegúrate de que los campos en el populate sean correctos
+            .populate('userId', 'nombre') 
             .populate('productId', 'nombre');
 
         if (!order) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        // Verificar que el usuario es el dueño del pedido o es admin
         if (req.user.role !== 'admin' && req.user._id.toString() !== order.userId._id.toString()) {
             return res.status(403).json({ message: 'Acceso denegado. No tienes permiso para ver este pedido.' });
         }
 
-        res.json(order); // Enviar el pedido como respuesta
-
+        res.json(order); 
     } catch (error) {
         console.error('Error al buscar el pedido:', error);
         res.status(500).json({ message: 'Error al buscar el pedido', error: error.message });
     }
 };
-
-
 
 
 // Actualizar el estado de un pedido (admin)
@@ -91,22 +86,35 @@ const updateOrderStatus = async (req, res) => {
 };
 
 
-
 // Eliminar un pedido (admin)
 const deleteOrder = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedOrder = await Order.findByIdAndDelete(id);
 
-        if (!deletedOrder) {
+        // Buscar el pedido en la base de datos
+        const order = await Order.findById(id);
+
+        // Verificar si el pedido existe
+        if (!order) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        res.json({ message: 'Pedido eliminado' });
+        // Verificar si el usuario es administrador o el propietario del pedido
+        if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'No tienes permiso para eliminar este pedido.' });
+        }
+
+        // Eliminar el pedido
+        await order.deleteOne();
+
+        res.json({ message: 'Pedido eliminado correctamente.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar pedido' });
+        console.error('Error al eliminar pedido:', error);
+        res.status(500).json({ message: 'Error al eliminar pedido.' });
     }
 };
+
+module.exports = { deleteOrder };
 
 // Obtener los pedidos del usuario autenticado
 const getUserOrders = async (req, res) => {
@@ -138,11 +146,6 @@ const getUserOrders = async (req, res) => {
         res.status(500).json({ message: 'Error al buscar los pedidos del usuario', error: error.message });
     }
 };
-
-
-
-
-
 
 module.exports = {
     createOrder,
