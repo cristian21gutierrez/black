@@ -86,21 +86,38 @@ const updateOrderStatus = async (req, res) => {
 };
 
 
-// Eliminar un pedido (admin)
+// Eliminar un pedido (admin o usuario propietario)
 const deleteOrder = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedOrder = await Order.findByIdAndDelete(id);
+        const userId = req.user._id;
 
-        if (!deletedOrder) {
+        // Buscar el pedido por ID
+        const order = await Order.findById(id);
+
+        // Verificar si el pedido existe
+        if (!order) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        res.json({ message: 'Pedido eliminado' });
+        // Verificar si el usuario es administrador o el propietario del pedido
+        if (req.user.role === 'admin' || order.userId.toString() === userId.toString()) {
+            const deletedOrder = await Order.findByIdAndDelete(id);
+
+            if (!deletedOrder) {
+                return res.status(404).json({ message: 'Pedido no encontrado' });
+            }
+
+            return res.json({ message: 'Pedido eliminado' });
+        } else {
+            return res.status(403).json({ message: 'Acceso denegado. No tienes permiso para eliminar este pedido.' });
+        }
     } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar pedido' });
+        console.error('Error al eliminar pedido:', error);
+        res.status(500).json({ message: 'Error al eliminar pedido', error });
     }
 };
+
 
 // Obtener los pedidos del usuario autenticado
 const getUserOrders = async (req, res) => {
