@@ -133,6 +133,62 @@ const getUserOrders = async (req, res) => {
     }
 };
 
+
+
+
+
+const editUserOrder = async (req, res) => {
+    try {
+        const { id } = req.params; // ID del pedido
+        const { quantity, status } = req.body; // Campos que pueden ser actualizados
+
+        // Verificar si el pedido pertenece al usuario autenticado
+        const order = await Order.findById(id);
+
+        if (!order) {
+            return res.status(404).json({ message: 'Pedido no encontrado' });
+        }
+
+        if (order.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'No tienes permiso para editar este pedido' });
+        }
+
+        // Actualizar el pedido
+        if (quantity) order.quantity = quantity;
+        if (status) order.status = status; // Opcionalmente permitir actualización de estado
+        await order.save();
+
+        res.json({ message: 'Pedido actualizado', order });
+    } catch (error) {
+        console.error('Error al editar el pedido:', error);
+        res.status(500).json({ message: 'Error al editar el pedido', error: error.message });
+    }
+};
+
+const deleteUserOrder = async (req, res) => {
+    try {
+        const { id } = req.params; // ID del pedido
+
+        // Verificar si el pedido pertenece al usuario autenticado
+        const order = await Order.findById(id);
+
+        if (!order) {
+            return res.status(404).json({ message: 'Pedido no encontrado' });
+        }
+
+        if (order.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'No tienes permiso para eliminar este pedido' });
+        }
+
+        // Eliminar el pedido
+        await order.deleteOne();
+
+        res.json({ message: 'Pedido eliminado' });
+    } catch (error) {
+        console.error('Error al eliminar el pedido:', error);
+        res.status(500).json({ message: 'Error al eliminar el pedido', error: error.message });
+    }
+};
 module.exports = {
     createOrder,
     getAllOrders,
@@ -140,5 +196,8 @@ module.exports = {
     updateOrderStatus,
     deleteOrder,
     getUserOrders,
+
+    editUserOrder,
+    deleteUserOrder,
      
 };

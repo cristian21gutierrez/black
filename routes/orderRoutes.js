@@ -1,7 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { protegerRuta, verificarAdmin } = require('../middleware/authMiddleware');
-const { createOrder, getAllOrders, getOrderById, updateOrderStatus, deleteOrder, getUserOrders } = require('../controllers/orderController');
+const { createOrder, getAllOrders, getOrderById, updateOrderStatus, deleteOrder, getUserOrders,editUserOrder, 
+    deleteUserOrder  } = require('../controllers/orderController');
+
+
+
+router.put('/:id', protegerRuta, editUserOrder); // Editar un pedido del usuario autenticado
+router.delete('/:id', protegerRuta, deleteUserOrder); // Eliminar un pedido del usuario autenticado
+
 
 // Ruta para obtener los pedidos del usuario autenticado (usuario común)
 router.get('/myorders', protegerRuta, getUserOrders);
