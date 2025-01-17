@@ -20,7 +20,7 @@ const ProductSchema = new mongoose.Schema({
     },
     imagen: {
         type: String,
-        required: false, // Podrías hacer que sea obligatorio si lo prefieres
+        required: false, 
     },
     stock: {
         type: Number,

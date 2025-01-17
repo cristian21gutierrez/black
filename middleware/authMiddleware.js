@@ -25,8 +25,6 @@ const protegerRuta = async (req, res, next) => {
     }
 };
 
-
-// Middleware para verificar si el usuario es admin
 const verificarAdmin = (req, res, next) => {
     if (req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Acceso denegado. No eres administrador' });

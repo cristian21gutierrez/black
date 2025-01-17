@@ -11,13 +11,13 @@ app.use(express.json());
 
 connected();
 
-// Importar y usar las rutas
+
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 
-// Prefijos para las rutas
+
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);

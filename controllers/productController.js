@@ -1,6 +1,5 @@
 const Product = require('../models/Product');
 
-// Obtener todos los productos
 const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find();
@@ -10,7 +9,6 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-// Crear un nuevo producto
 const createProduct = async (req, res) => {
     try {
         const newProduct = new Product(req.body);
@@ -21,17 +19,14 @@ const createProduct = async (req, res) => {
     }
 };
 
-// Modificar un producto
 const updateProduct = async (req, res) => {
     try {
         let { id } = req.params;
         console.log(`ID recibido para actualización: ${id}`);
-
-        // Eliminar caracteres no deseados del ID 
+ 
         id = id.replace(/:/g, '');
         console.log(`ID limpiado para actualización: ${id}`);
 
-        // Verificar si el ID es válido
         if (!/^[0-9a-fA-F]{24}$/.test(id)) {
             console.log(`ID inválido detectado: ${id}`);
             return res.status(400).json({ message: 'ID inválido' });
@@ -49,9 +44,6 @@ const updateProduct = async (req, res) => {
     }
 };
 
-
-
-// Eliminar un producto
 const deleteProduct = async (req, res) => {
     try {
         const { id } = req.params;
@@ -62,7 +54,6 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-// Obtener productos por categoría
 const getProductsByCategory = async (req, res) => {
     try {
         const { categoria } = req.params;
