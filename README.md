@@ -2,7 +2,7 @@ Sistema CRUD de Usuarios y Productos
 
     Una aplicación backend desarrollada con Node.js que permite gestionar usuarios, productos y pedidos. Incluye funcionalidades de autenticación y autorización, y está diseñada para manejar operaciones de tipo CRUD.
 
-Características
+A- Características
 
    Gestor de Usuarios: Crear, leer, actualizar y eliminar usuarios.
 
@@ -12,7 +12,7 @@ Características
 
    Modelo de Pedidos: Manejo de pedidos asociados a usuarios y productos.
 
-Tecnologías Utilizadas
+B- Tecnologías Utilizadas
 
    Node.js: Plataforma de desarrollo.
 
@@ -24,7 +24,7 @@ Tecnologías Utilizadas
 
    Postman: Pruebas de la API.
 
-Estructura del Proyecto
+C- Estructura del Proyecto
 
   A continuación se describe la estructura del proyecto y el propósito de cada componente:
 
