@@ -57,7 +57,7 @@ const getAllOrders = async (req, res) => {
         
         const orders = await Order.find()
             .populate('userId', 'nombre')  
-            .populate('productId', 'nombre');  
+            .populate('productId', 'nombre precio');  
 
         res.json(orders);
     } catch (error) {
