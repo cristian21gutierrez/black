@@ -4,21 +4,48 @@ const mongoose = require('mongoose');
 const createOrder = async (req, res) => {
     try {
         const { productId, quantity } = req.body;
-        const userId = req.user._id; 
-        
+        const userId = req.user._id;
+
         if (!productId || !quantity) {
             return res.status(400).json({ message: 'Todos los campos son obligatorios' });
         }
+
+        // Obtener el producto para saber el precio
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        const totalPrice = product.precio * quantity;
 
         const newOrder = new Order({
             userId,
             productId,
             quantity,
-            status: 'pendiente', 
+            totalPrice,
+            status: 'pendiente',
         });
+
         await newOrder.save();
 
-        res.status(201).json(newOrder);
+        // Calcular total del día
+        const inicioDia = new Date();
+        inicioDia.setHours(0, 0, 0, 0);
+        const finDia = new Date();
+        finDia.setHours(23, 59, 59, 999);
+
+        const ordersDelDia = await Order.find({
+            createdAt: { $gte: inicioDia, $lte: finDia }
+        });
+
+        const totalDia = ordersDelDia.reduce((acc, o) => acc + o.totalPrice, 0);
+
+        res.status(201).json({
+            message: 'Pedido creado con éxito',
+            pedido: newOrder,
+            totalDelDía: totalDia.toFixed(2)
+        });
+
     } catch (error) {
         console.error('Error al crear pedido:', error);
         res.status(500).json({ message: 'Error al crear pedido', error });
