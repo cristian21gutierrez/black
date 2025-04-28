@@ -156,7 +156,8 @@ const editUserOrder = async (req, res) => {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        if (order.userId.toString() !== req.user._id.toString()) {
+        // Permitir que el admin también edite
+        if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'No tienes permiso para editar este pedido' });
         }
 
@@ -171,6 +172,7 @@ const editUserOrder = async (req, res) => {
     }
 };
 
+
 const deleteUserOrder = async (req, res) => {
     try {
         const { id } = req.params; 
@@ -181,7 +183,8 @@ const deleteUserOrder = async (req, res) => {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        if (order.userId.toString() !== req.user._id.toString()) {
+        // Permitir que el admin también elimine
+        if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'No tienes permiso para eliminar este pedido' });
         }
 
@@ -193,6 +196,7 @@ const deleteUserOrder = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el pedido', error: error.message });
     }
 };
+
 module.exports = {
     createOrder,
     getAllOrders,
