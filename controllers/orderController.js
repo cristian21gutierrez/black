@@ -101,9 +101,11 @@ const updateOrderStatus = async (req, res) => {
         if (!updatedOrder) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
-          if (req.user.role !== 'admin' && req.user._id.toString() !== order.userId._id.toString()) {
-            return res.status(403).json({ message: 'Acceso denegado. No tienes permiso para ver este pedido.' });
+          // Permitir que el admin también edite
+          if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'No tienes permiso para editar este pedido' });
         }
+
 
 
         res.json(updatedOrder);
