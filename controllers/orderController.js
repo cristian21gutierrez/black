@@ -1,9 +1,6 @@
 const Order = require('../models/Order');
 const mongoose = require('mongoose');
-
 const Product = require('../models/Product'); // ✅ Agregar esta línea
-
-
 
 const createOrder = async (req, res) => {
     try {
@@ -58,7 +55,6 @@ const createOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
     try {
-        
         const orders = await Order.find()
             .populate('userId', 'nombre')  
             .populate('productId', 'nombre precio');  
@@ -96,21 +92,22 @@ const updateOrderStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
+        
         const updatedOrder = await Order.findByIdAndUpdate(id, { status }, { new: true });
 
         if (!updatedOrder) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
-          // Permitir que el admin también edite
-          if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
+
+        // Verificar si el usuario tiene permisos para editar el estado del pedido
+        if (req.user.role !== 'admin' && updatedOrder.userId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'No tienes permiso para editar este pedido' });
         }
 
-
-
         res.json(updatedOrder);
     } catch (error) {
-        res.status(500).json({ message: 'Error al actualizar pedido' });
+        console.error('Error al actualizar pedido:', error);
+        res.status(500).json({ message: 'Error al actualizar pedido', error });
     }
 };
 
@@ -125,6 +122,7 @@ const deleteOrder = async (req, res) => {
 
         res.json({ message: 'Pedido eliminado' });
     } catch (error) {
+        console.error('Error al eliminar pedido:', error);
         res.status(500).json({ message: 'Error al eliminar pedido' });
     }
 };
@@ -154,7 +152,6 @@ const getUserOrders = async (req, res) => {
     }
 };
 
-
 const editUserOrder = async (req, res) => {
     try {
         const { id } = req.params; 
@@ -166,7 +163,7 @@ const editUserOrder = async (req, res) => {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        // Permitir que el admin también edite
+        // Verificar si el usuario tiene permisos para editar el pedido
         if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'No tienes permiso para editar este pedido' });
         }
@@ -182,7 +179,6 @@ const editUserOrder = async (req, res) => {
     }
 };
 
-
 const deleteUserOrder = async (req, res) => {
     try {
         const { id } = req.params; 
@@ -193,7 +189,7 @@ const deleteUserOrder = async (req, res) => {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 
-        // Permitir que el admin también elimine
+        // Verificar si el usuario tiene permisos para eliminar el pedido
         if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'No tienes permiso para eliminar este pedido' });
         }
@@ -216,5 +212,4 @@ module.exports = {
     getUserOrders,
     editUserOrder,
     deleteUserOrder,
-     
 };
