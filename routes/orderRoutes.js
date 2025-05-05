@@ -11,7 +11,7 @@ router.get('/myorders', protegerRuta, getUserOrders);
 router.post('/', protegerRuta, createOrder);
 router.get('/', protegerRuta, verificarAdmin, getAllOrders);
 router.get('/:id', protegerRuta, getOrderById);
-router.put('/:id', protegerRuta, verificarAdmin, updateOrderStatus);
+router.put('/admin/:id', protegerRuta, verificarAdmin, updateOrderStatus);
 router.delete('/:id', protegerRuta, verificarAdmin, deleteOrder);
 
 module.exports = router;
